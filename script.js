@@ -5,7 +5,7 @@ const rocketSize = { height: 20, width: 20 };
 let rocketSpeed = 90;
 
 function playSound(type) {
-    var audio = type == 'rocket' ? new Audio("./rocket.wav") : new Audio("./iron_dome.wav");
+    var audio = type == "rocket" ? new Audio("./rocket.wav") : new Audio("./iron_dome.wav");
     audio.play();
 }
 
@@ -44,63 +44,56 @@ const clearSpecificDot = (x, y) => {
 const initWar = () => {
     let finalPos = getRandomFinalPoint();
 
-    console.log("finalPos:" + JSON.stringify(finalPos));
+    let rocketStartPos = { x: -200, y: 500 };
 
-    let startPos = { x: -200, y: 500 };
+    let rocketStepSize = (finalPos.x - rocketStartPos.x) / 10;
 
-    let stepLength = (finalPos.x - startPos.x) / 10;
+    let yStepSize = (finalPos.y - rocketStartPos.y) / rocketStepSize;
 
-    console.log("stepLength:" + stepLength);
+    let rocketCurrentPos = rocketStartPos;
 
-    let yStepsSize = (finalPos.y - startPos.y) / stepLength;
-
-    console.log("yStepsSize:" + yStepsSize);
-
-    let currentPosition = startPos;
-
-    let index = 0;
-    let indexx = 0;
+    
     let ironDomeStartPos = { x: 600, y: 500 };
-    let ironDomeStartStepLengthx = (finalPos.x - ironDomeStartPos.x) / 10;
-    let ironDomeStartStepLengthy = (finalPos.y - ironDomeStartPos.y) / 10;
+    
+    let ironDomeStepSize = (finalPos.x - ironDomeStartPos.x) / 10;
+    
+    let yIronDomeStepSize = (finalPos.y - ironDomeStartPos.y) / 10;
+    
     let ironDomeCurrentPos = ironDomeStartPos;
-
-    playSound('rocket');
+    
+    playSound("rocket");
+    
+    let rocketIndex = 0;
+    let ironDomeIndex = 0;
 
     let rocketInterval = setInterval(() => {
-        if (index <= stepLength) {
-            clearSpecificDot(
-                currentPosition.x - 10,
-                currentPosition.y - yStepsSize
-            );
-            startRocket(currentPosition.x, currentPosition.y);
-            currentPosition = {
-                x: currentPosition.x + 10,
-                y: currentPosition.y + yStepsSize,
+        if (rocketIndex <= rocketStepSize) {
+            clearSpecificDot(rocketCurrentPos.x - 10, rocketCurrentPos.y - yStepSize);
+            startRocket(rocketCurrentPos.x, rocketCurrentPos.y);
+            rocketCurrentPos = {
+                x: rocketCurrentPos.x + 10,
+                y: rocketCurrentPos.y + yStepSize,
             };
-            return index++;
+            return rocketIndex++;
         }
         clearCanvas();
         clearInterval(rocketInterval);
     }, rocketSpeed);
 
-    let rocketIntervall = setInterval(() => {
-        if (indexx < 10) {
-            clearSpecificDot(
-                ironDomeCurrentPos.x - ironDomeStartStepLengthx,
-                ironDomeCurrentPos.y - ironDomeStartStepLengthy
-            );
+    let ironDomeInterval = setInterval(() => {
+        if (ironDomeIndex < 10) {
+            clearSpecificDot(ironDomeCurrentPos.x - ironDomeStepSize, ironDomeCurrentPos.y - yIronDomeStepSize);
             startRocket(ironDomeCurrentPos.x, ironDomeCurrentPos.y);
             ironDomeCurrentPos = {
-                x: ironDomeCurrentPos.x + ironDomeStartStepLengthx,
-                y: ironDomeCurrentPos.y + ironDomeStartStepLengthy,
+                x: ironDomeCurrentPos.x + ironDomeStepSize,
+                y: ironDomeCurrentPos.y + yIronDomeStepSize,
             };
-            return indexx++;
+            return ironDomeIndex++;
         }
         clearCanvas();
-        playSound('iron_dome');
-        clearInterval(rocketIntervall);
-    }, (stepLength * rocketSpeed) / 10);
+        playSound("iron_dome");
+        clearInterval(ironDomeInterval);
+    }, (rocketStepSize * rocketSpeed) / 10);
 };
 
 setInterval(() => {
