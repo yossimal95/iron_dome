@@ -4,10 +4,10 @@ const ctx = canvas.getContext("2d");
 const rocketSize = { height: 20, width: 20 };
 let rocketSpeed = 90;
 
-function playSound(type) {
+const playSound = (type) => {
     var audio = type == "rocket" ? new Audio("./rocket.wav") : new Audio("./iron_dome.wav");
     audio.play();
-}
+};
 
 const getRandomStartPoint = () => {
     return {
@@ -52,17 +52,16 @@ const initWar = () => {
 
     let rocketCurrentPos = rocketStartPos;
 
-    
     let ironDomeStartPos = { x: 600, y: 500 };
-    
+
     let ironDomeStepSize = (finalPos.x - ironDomeStartPos.x) / 10;
-    
+
     let yIronDomeStepSize = (finalPos.y - ironDomeStartPos.y) / 10;
-    
+
     let ironDomeCurrentPos = ironDomeStartPos;
-    
+
     playSound("rocket");
-    
+
     let rocketIndex = 0;
     let ironDomeIndex = 0;
 
